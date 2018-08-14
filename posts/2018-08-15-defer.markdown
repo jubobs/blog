@@ -1,0 +1,127 @@
+---
+title: >-
+    Defer: sweet, but no syntactic sugar
+author: Julien Cretel
+published: 2018-08-15T13:15:00Z
+---
+
+# `defer`, in a nutshell
+
+When learning Go, one quickly comes across the `defer` keyword.
+For instance, the [Tour of Go][tour] introduces `defer` thus:
+
+> A defer statement defers the execution of a function until the surrounding
+> function returns.
+>
+> The deferred call's arguments are evaluated immediately, but the function
+> call is not executed until the surrounding function returns.
+>
+> ``` go
+> package main
+>
+> import "fmt"
+>
+> func main() {
+> 	defer fmt.Println("world")
+>
+> 	fmt.Println("hello")
+> }
+> ```
+
+`defer` provides a convenient way of ensuring that some piece of code
+unconditionally gets executed before the enclosing function returns control to
+its caller.
+
+Often, you'll write a function that acquires some resources (file descriptor,
+mutex, etc.).
+Such a function must typically release those resources before returning,
+regardless of the execution path—your function may contain numerous return
+statements indeed.
+Failing to do so will likely result in issues at run time, such as resource
+leaks, deadlock, etc.
+
+The Tour of Go is not meant as an exhaustive introduction to Golang;
+it does a great job at demonstrating how `defer` works when the enclosing
+function returns _normally_, but it leaves some important subtleties out.
+
+# How well do you understand `defer`?
+
+## Quiz time!
+
+To test Gophers' understanding of `defer`'s semantics, I ran the following
+[poll][poll] on Twitter:
+
+> Functions `foo` and `bar` have exactly the same behaviour/semantics:
+>
+> ``` go
+> func foo(func f()) {
+>     f()
+>     fmt.Println("bye")
+> }
+>
+> func bar(func f()) {
+>     defer fmt.Println("bye")
+>     f()
+> }
+> ```
+>
+> True or false?
+
+Take a moment to think about it... What would your answer have been?
+
+Although the poll's response rate is low (only 16 respondents) and the
+respondents' level of proficiency with Golang difficult to ascertain,
+I do find the results revealing:
+the majority of respondents (56%) answered "true", yet the correct answer is
+"false".
+
+## An explanation
+
+Functions `foo` and `bar` do _not_ have the same semantics.
+In particular, if function `f` panics when invoked—either because it happens
+to be `nil` or because a panic occurs during its execution—function `bar`
+will simply panic (without printing anything), whereas function `foo` will
+print "bye" to standard output before panicking.
+You can try it for yourself on the [Go Playground][playground].
+
+In this case, if `fmt.println("bye")` is to be executed unconditionally,
+using `defer` is _not_ optional, because function `bar` has no guarantee that
+its callers will pass a function argument that doesn't panic when invoked.
+Thanks to the guarantees against panic that `defer` provides, function `foo`
+obviates the problem altogether.
+
+# To defer or not to defer: that is the question
+
+This example should serve as a caution. `defer` is easily misconstrued
+(guilty!) as a mere syntactic convenience. A failure to use it may result
+in serious issues in your Go programs.
+
+Granted, if you're writing performance-critical code (such as a
+[database][cockroach-talk]) and if you know what you're doing, you may be
+driven to eschew deferred statements in some places of your code, but
+
+> Always use `defer` (unless you have a good reason not to).
+
+is a good rule of thumb.
+To paraphrase Bill Kennedy's ([goinggodotnet][bill] on Twitter) exhortation,
+which he repeats liberally in his [video course][ultimatego]:
+
+> Correctness takes precedence over performance.
+
+Having a firm grasp of `defer`'s semantics is likely to pay great dividends
+towards the correctness of your Go programs.
+Don't defer reading the fine print about `defer` :)
+
+# Additional resources
+
+* [_Defer statements_][defer-spec] (language specification)
+* [_Defer, panic, and recover_][defer-panic-recover] (Go Blog)
+
+[bill]: https://twitter.com/goinggodotnet
+[cockroach-talk]: https://www.youtube.com/watch?v=hWNwI5q01gI&time_continue=15m10s
+[defer-panic-recover]: https://blog.golang.org/defer-panic-and-recover
+[defer-spec]: https://golang.org/ref/spec#Defer_statements
+[playground]: https://play.golang.org/p/RSk7EGtFmRn
+[poll]: https://twitter.com/_jubobs_/status/1029027873284337664
+[tour]: https://tour.golang.org/flowcontrol/12
+[ultimatego]: https://www.safaribooksonline.com/videos/ultimate-go-programming/9780134757476
