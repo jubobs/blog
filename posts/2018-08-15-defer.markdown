@@ -55,13 +55,13 @@ To test Gophers' understanding of `defer`'s semantics, I ran the following
 >
 > ``` go
 > func foo(func f()) {
+>     defer fmt.Println("bye")
 >     f()
->     fmt.Println("bye")
 > }
 >
 > func bar(func f()) {
->     defer fmt.Println("bye")
 >     f()
+>     fmt.Println("bye")
 > }
 > ```
 >
