@@ -25,6 +25,8 @@ should soon be available on [dotconferences.com][dotconf].
 (Those intrigued by Go may be interested to know that I give [training for
 Go beginners through Human Coders][human-coders-go].)
 
+![Taken at dotGo 2019 in Paris on March 25, 2019 by Nicolas Ravelli](/images/nicolas_ravelli_1.jpg)
+
 # First session
 
 ## Daniel Martí: more reliable microbenchmarks
@@ -80,6 +82,8 @@ maintain than hand-rolled assembly code, yet the generated assembly code is
 as performant. Michael illustrated the benefits of his approach by showcasing
 a SHA-1 implementation; impressive!
 
+![Taken at dotGo 2019 in Paris on March 25, 2019 by Nicolas Ravelli](/images/nicolas_ravelli_2.jpg)
+
 # Second session
 
 ## Ligning talks
@@ -134,6 +138,8 @@ same repo, especially when you work at Google, who seems dead set on
 monolithic repos. Here be dragons! I'll let you watch Jean's talk for the gory
 details, but my takeaway is this rule of thumb: **one module, one repo**.
 
+![Taken at dotGo 2019 in Paris on March 25, 2019 by Nicolas Ravelli](/images/nicolas_ravelli_3.jpg)
+
 # Third session
 
 ## Johann Brandhorst: WebAssemly from Go
@@ -157,6 +163,8 @@ useful...
 Incidentally, for programs that have modest memory needs and whose execution
 is guaranteed to be short, Bryan tells us that you can get a performance
 boost by completely disabling the garbage collector (`GOGC=off`). A cool trick!
+
+![Taken at dotGo 2019 in Paris on March 25, 2019 by Nicolas Ravelli](/images/nicolas_ravelli_4.jpg)
 
 ## Ellen Körbes: No, this is *not* a sex toy...
 
@@ -207,6 +215,8 @@ also open the possibility of error-message localisation, for the benefit of
 programmers who would rather read error messages in their native tongue.
 The new API is already available in experimental package
 [golang.org/x/exp/errors][exp-errors]. Great stuff!
+
+![Taken at dotGo 2019 in Paris on March 25, 2019 by Nicolas Ravelli](/images/nicolas_ravelli_5.jpg)
 
 # Epilogue
 
