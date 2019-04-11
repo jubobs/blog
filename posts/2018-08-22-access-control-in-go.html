@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>jubobs's blog - Access control in Go: a primer for Java developers</title>
+        <link rel="stylesheet" href="../css/default.css" />
+        <link rel="stylesheet" href="../css/syntax.css" />
+    </head>
+    <body>
+        <header>
+            <div class="logo">
+                <a href="../">jubobs's blog</a>
+            </div>
+            <nav>
+                <a href="../">Home</a>
+                <a href="../about.html">About</a>
+                <a href="../contact.html">Contact</a>
+                <a href="../archive.html">Archive</a>
+            </nav>
+        </header>
+
+        <main role="main">
+            <h1>Access control in Go: a primer for Java developers</h1>
+            <article>
+    <section class="header">
+        Posted on August 22, 2018
+        
+            by Julien Cretel
+        
+    </section>
+    <section>
+        <p>Go supports multiple programming paradigms, including object orientation. However, if you’re coming to Go from Java, you may be slightly… ehm… <em>disoriented</em>. One striking absence is that of any access modifiers. You may be wondering:</p>
+<blockquote>
+<p>Where are my <code>public</code>, <code>protected</code>, and <code>private</code> keywords? What mechanisms for access control does Go provide?</p>
+</blockquote>
+<p>Fret not! Access control in Go is simpler than in Java. No access modifiers needed!</p>
+<h1 id="why-go-needs-not-four-but-only-two-access-levels">Why Go needs, not four, but only two access levels</h1>
+<p>You’re most likely familiar with the four access levels that Java provides. I’ve listed them below, from the most to the least restrictive, along with a concise description of their semantics:</p>
+<ul>
+<li><strong>private</strong>: only accessible from the same class</li>
+<li><strong>package-private</strong>: only accessible from the same package</li>
+<li><strong>protected</strong>: only accessible from the same package and (direct or indirect) subclasses</li>
+<li><strong>public</strong>: accessible from anywhere</li>
+</ul>
+<p>(Note: The term “package-private” is nowhere to be found in the <a href="https://docs.oracle.com/javase/specs/jls/se10/jls10.pdf">Java language specification</a> but was popularised by Joshua Bloch in his book, <a href="https://www.pearson.com/us/higher-education/program/Bloch-Effective-Java-3rd-Edition/PGM1763855.html"><em>Effective Java</em></a>.)</p>
+<p>We’ve lined them up; now let’s knock two of them down!</p>
+<h2 id="package-as-the-unit-of-encapsulation">Package as the unit of encapsulation</h2>
+<p>Go allows you to define concrete types—which in Java, would be <em>classes</em>—but</p>
+<blockquote>
+<p>[…] the unit of encapsulation is the package, not the type as in many other languages.</p>
+</blockquote>
+<p>(source: <a href="https://www.gopl.io/">The Go Programming Language, Donovan &amp; Kernighan</a>, section 6.6)</p>
+<p>For instance,</p>
+<blockquote>
+<p>The fields of a struct type are visible to all code within the same package.</p>
+</blockquote>
+<p>(ibid)</p>
+<p>Therefore, Go has no need for a distinction between <em>private</em> and <em>package-private</em>. And then there were three:</p>
+<ul>
+<li><del><strong>private</strong>: only accessible from the same class</del></li>
+<li><strong>package-private</strong>: only accessible from the same package</li>
+<li><strong>protected</strong>: only accessible from the same package and (direct or indirect) subclasses</li>
+<li><strong>public</strong>: accessible from anywhere</li>
+</ul>
+<h2 id="no-inheritance">No inheritance</h2>
+<p>Most notably, Go provides no mechanism for inheritance. Therefore, Go has no need for a distinction between <em>package-private</em> and <em>protected</em>. And then there were two:</p>
+<ul>
+<li><del><strong>private</strong>: only accessible from the same class</del></li>
+<li><strong>package-private</strong>: only accessible from the same package</li>
+<li><del><strong>protected</strong>: only accessible from the same package and (direct or indirect) subclasses</del></li>
+<li><strong>public</strong>: accessible from anywhere</li>
+</ul>
+<h1 id="access-control-in-go">Access control in Go</h1>
+<p>We’re left with two access levels, which is all Go needs: public and package-private. Go’s terminology is different from Java’s, though: an identifier is said to be either <em>exported</em> (public) or <em>non-exported</em> (package-private). You will likely also come across the term “unexported”, which is an informal synonym of <em>non-exported</em>, but <a href="https://twitter.com/_jubobs_/status/1027995728692604928">I recommend using the more formal term</a>.</p>
+<p>For controlling access to identifiers, <a href="https://golang.org/ref/spec#Exported_identifiers">the Go designers opted for naming convention rather than verbosity</a>:</p>
+<blockquote>
+<p>An identifier is exported if both:</p>
+<ol type="1">
+<li><strong>the first character of the identifier’s name is a Unicode uppercase letter</strong> (Unicode class “Lu”); and</li>
+<li>the identifier is declared in the package block or it is a field name or method name.</li>
+</ol>
+<p>All other identifiers are not exported.</p>
+</blockquote>
+<p>(my emphasis)</p>
+<p>To fix ideas, here is an example involving two package-level variables:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode go"><code class="sourceCode go"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">package</span> foo</a>
+<a class="sourceLine" id="cb1-2" title="2"></a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="kw">var</span> (</a>
+<a class="sourceLine" id="cb1-4" title="4">    Bar = <span class="st">&quot;Bar&quot;</span></a>
+<a class="sourceLine" id="cb1-5" title="5">    baz = <span class="st">&quot;baz&quot;</span></a>
+<a class="sourceLine" id="cb1-6" title="6">)</a></code></pre></div>
+<p>Package <code>foo</code> exports <code>Bar</code>, because the first letter is uppercase. However, <code>foo</code> does <em>not</em> export <code>baz</code>, because the first letter is <em>not</em> uppercase.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p><a href="https://www.youtube.com/watch?v=5kj5ApnhPAE">Go was designed to be easy to read</a>, and the design decisions around access control certainly contribute to Go’s readability: not only is the code unencumbered by pesky access modifiers, but the case of an identifier’s first letter is enough to know whether the identifier is exported.</p>
+<p>This is just one reason why you may find that reading Go takes less of a toll on your brain than reading Java does. But that’s just my opinion. What do <em>you</em> think?</p>
+    </section>
+</article>
+
+        </main>
+
+        <footer>
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </footer>
+    </body>
+</html>

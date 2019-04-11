@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>jubobs's blog - Summary of dotGo 2019</title>
+        <link rel="stylesheet" href="../css/default.css" />
+        <link rel="stylesheet" href="../css/syntax.css" />
+    </head>
+    <body>
+        <header>
+            <div class="logo">
+                <a href="../">jubobs's blog</a>
+            </div>
+            <nav>
+                <a href="../">Home</a>
+                <a href="../about.html">About</a>
+                <a href="../contact.html">Contact</a>
+                <a href="../archive.html">Archive</a>
+            </nav>
+        </header>
+
+        <main role="main">
+            <h1>Summary of dotGo 2019</h1>
+            <article>
+    <section class="header">
+        Posted on April 11, 2019
+        
+            by Julien Cretel
+        
+    </section>
+    <section>
+        <p>(This post is also <a href="https://blog.humancoders.com/retour-sur-dotgo-2019-2742/">available in French on Human Coders’ blog</a>.)</p>
+<p>About two weeks ago, I had the privilege to attend <a href="https://www.dotgo.eu/">dotGo 2019</a>, the fifth edition of the European Go Conference. Whereas tech conferences I’ve attended in the past tended to be held in soulless hotels or convention centres, the dotGo team went all out and managed to secure the prestigious Théâtre de Paris, on rue Blanche, as a venue for this conference. No doubt the sponsors, including Heetch, Microsoft, Datadog, Soucegraph, and GitHub, among others, helped.</p>
+<p>Golang legend Dave Cheney acted as master of ceremony. Despite its short duration (a single day, followed by a day of workshops), the conference was packed with talks. Here are my takeaways. I won’t go into too much detail here; I just want to give you a taste of what you can expect from the talks, which should soon be available on <a href="https://www.dotconferences.com/">dotconferences.com</a>.</p>
+<p>(Those intrigued by Go may be interested to know that I give <a href="https://www.humancoders.com/formations/go">training for Go beginners through Human Coders</a>.)</p>
+<figure>
+<img src="../images/nicolas_ravelli_1.jpg" alt="Taken at dotGo 2019 in Paris on March 25, 2019 by Nicolas Ravelli" /><figcaption>Taken at dotGo 2019 in Paris on March 25, 2019 by Nicolas Ravelli</figcaption>
+</figure>
+<h1 id="first-session">First session</h1>
+<h2 id="daniel-martí-more-reliable-microbenchmarks">Daniel Martí: more reliable microbenchmarks</h2>
+<p><a href="https://twitter.com/mvdan_">Daniel Martí</a> opened the conference with a rather technical talk. Although the Go command-line interface allows programmers to run microbenchmarks on performance-critical parts of their code, the results can be inconclusive because of prohibitive variance. In plain terms, due to various environmental factors (such as CPU activity), a microbenchmark may look promising on one run, only to sorely disappoint on a subsequent run. Daniel showed a number of novel techniques to reduce the noise and get more definitive answers from your microbenchmarks.</p>
+<h2 id="kat-zién-doomain-driven-design-and-go">Kat Zién: doomain-driven design and Go</h2>
+<p><a href="https://twitter.com/kasiazien">Kat Zién</a> then gave a talk on a topic close to my domain-driven designer’s heart: <em>hexagonal architecture</em>. The term was coined by <a href="http://wiki.c2.com/?HexagonalArchitecture">Alistair Cockburn</a>, but the basic idea can be traced back to earlier times and keeps being rediscovered under different names, such as “onion architecture”. Hexagonal Architecture consists in structuring a system by cleanly separating the implementation of the business domain from the technical components (e.g. the database) that support it. The approach promises a more understandable and maintainable system.</p>
+<p>Kat’s talk was a good introduction to hexagonal architecture, but I wish she had shown how to apply its principles to Go programs specifically (check out <a href="https://www.youtube.com/watch?v=twcDf_Y2gXY">Marcus Olsson’s talk</a> about this). However, talks had to be kept short, and I can forgive Kat for not delving too much into the gory details. I’ll be sure to check her future talks out.</p>
+<h2 id="ignat-korchagin-go-as-a-scripting-language">Ignat Korchagin: Go as a scripting language</h2>
+<p><a href="https://twitter.com/secumod">Ignat Korchagin</a> then shed some light on the hoops one has to jump through in order to use Go as a scripting language. In particular, Go’s syntax being incompatible with the standard shebang syntax does not make our life easier. Ignat showed some workarounds, but none satisfy me yet. I’ll stick to Python or shell scripts for now.</p>
+<h2 id="michael-mcloughlin-closer-to-the-metal">Michael McLoughlin: closer to the metal</h2>
+<p><a href="https://twitter.com/mbmcloughlin">Michael McLoughlin</a> then talked about the mechanics of writing assembly in Go, with a strong focus on amd64. When performance is paramount, Go may sometimes fall short, and you have have to resort to writing code in assembly; several standard-library routines are actually written not in Go, but in assembly. However, writing raw assembly code is a dangerous exercise (no type checker to guide you towards correctness), and bugs can have serious ramifications (imagine a bug in a cryptographic routine).</p>
+<p>Michael’s answer to this problem is <a href="https://github.com/mmcloughlin/avo">avo</a>, which allows you write Go programs to generate assembly code. The benefits are clear: the Go source code fed to avo is comparatively more compact, easier to test, understand, and maintain than hand-rolled assembly code, yet the generated assembly code is as performant. Michael illustrated the benefits of his approach by showcasing a SHA-1 implementation; impressive!</p>
+<figure>
+<img src="../images/nicolas_ravelli_2.jpg" alt="Taken at dotGo 2019 in Paris on March 25, 2019 by Nicolas Ravelli" /><figcaption>Taken at dotGo 2019 in Paris on March 25, 2019 by Nicolas Ravelli</figcaption>
+</figure>
+<h1 id="second-session">Second session</h1>
+<h2 id="ligning-talks">Ligning talks</h2>
+<p>The audience was then treated to a round of lightning talks by <a href="https://twitter.com/owulveryck">Olivier Wulveryck</a>, <a href="https://twitter.com/empijei">Roberto Clapis</a>, <a href="https://twitter.com/nataliepis">Natalie Pistunovich</a>, <a href="https://twitter.com/val_deleplace">Valentin Deleplace</a>, and <a href="https://twitter.com/joanjan14">Joan López de la Franca Beltran</a>. Valentin Deleplace, with his dual implementations of a semaphore, was the highlight, for me. You can think of a semaphore as a swimming pool where patrons must each don a swimming cap before entering the pool and where only a fixed number of swimming caps are made available. Alternatively, you can think of a semaphore as a swimming pool where patrons must lock their belongings before entering the pool and the number of lockers is limited.</p>
+<h2 id="dave-cheney-constants-and-variables">Dave Cheney: constants and variables</h2>
+<p>Regular-length talks resumed with <a href="https://twitter.com/davecheney">Dave Cheney</a>’s. Stepping out of his role of master of ceremony for a moment, Dave chose to revisit <a href="https://dave.cheney.net/2016/04/07/constant-errors">one of his 2016 blogposts</a>. Go packages typically define some sentinel error values using the <code>errors.New</code> function. For instance, packages <code>io</code> and <code>rsa</code> define struct values respectively named <code>EOF</code> and <code>ErrVerification</code>, which clients can then use in equality tests to detect whether the code has strayed from the happy path.</p>
+<p>In an ideal world, such sentinel error values really ought to be constants but, because of some language quirks, those values have to be defined as variables (using <code>var</code>) and can therefore be clobbered by clients of the package that defines them. You can imagine the ramifications in terms of correctness and security.</p>
+<p>Dave then shared his workaround: first, define a custom error type whose underlying type is <code>string</code>, equip it with an <code>Error</code> method that simply returns the <code>string</code> value, and define your sentinel error values with it. Then, the latter can be defined as <code>const</code>s rather than <code>var</code>s, and all is well. This is an interesting approach which you’re free to experiment with in your code, though the idiom is unlikely to achieve currency in the standard library.</p>
+<h2 id="jean-de-klerk-go-modules-and-git-repos">Jean de Klerk: Go modules and Git repos</h2>
+<p><a href="https://twitter.com/jadekler">Jean de Klerk</a> talked about the intricacies of having multi-module repositories. Not so long ago, dependency management in Go left much to be desired. Everything changed (for the better) when Go 1.11 added a bona bide <a href="https://golang.org/doc/go1.11#modules">module system</a>, born out of the vgo project. The module system is still in its infancy and is expected to reach general-availability status with version 1.13.</p>
+<p>The recommended approach is to have to one Go module per Git repository. However, you may, in some cases, want to track multiple modules within the same repo, especially when you work at Google, who seems dead set on monolithic repos. Here be dragons! I’ll let you watch Jean’s talk for the gory details, but my takeaway is this rule of thumb: <strong>one module, one repo</strong>.</p>
+<figure>
+<img src="../images/nicolas_ravelli_3.jpg" alt="Taken at dotGo 2019 in Paris on March 25, 2019 by Nicolas Ravelli" /><figcaption>Taken at dotGo 2019 in Paris on March 25, 2019 by Nicolas Ravelli</figcaption>
+</figure>
+<h1 id="third-session">Third session</h1>
+<h2 id="johann-brandhorst-webassemly-from-go">Johann Brandhorst: WebAssemly from Go</h2>
+<p><a href="https://twitter.com/JohanBrandhorst">Johann Brandhorst</a> had another live-coding session in store for us, this time about writing WebAssembly using Go. Because I still haven’t delved much into WebAssembly myself, some of Johann’s talk went over my head, but, if the audience’s reaction is anything to go by, good things are coming our way.</p>
+<h2 id="bryan-boreham-garbage-collector-tuning">Bryan Boreham: garbage-collector tuning</h2>
+<p><a href="https://twitter.com/bboreham">Bryan Boreham</a> gave a talk about how to tune Go’s garbage collector. The JVM’s garbage collector offers numerous options and can be notoriously difficult to tune; there are entire books dedicated to this dark art. Life is comparatively simpler for Gophers: only one option, named <code>GOGC</code>, is available to tune the Go garbage collector! However, Bryan admitted that having options for setting the minimum and maximum sizes of the heap would be useful…</p>
+<p>Incidentally, for programs that have modest memory needs and whose execution is guaranteed to be short, Bryan tells us that you can get a performance boost by completely disabling the garbage collector (<code>GOGC=off</code>). A cool trick!</p>
+<figure>
+<img src="../images/nicolas_ravelli_4.jpg" alt="Taken at dotGo 2019 in Paris on March 25, 2019 by Nicolas Ravelli" /><figcaption>Taken at dotGo 2019 in Paris on March 25, 2019 by Nicolas Ravelli</figcaption>
+</figure>
+<h2 id="ellen-körbes-no-this-is-not-a-sex-toy">Ellen Körbes: No, this is <em>not</em> a sex toy…</h2>
+<p><a href="https://twitter.com/ellenkorbes">Ellen Körbes</a>, who—and this is important—identifies as non-binary, delivered an audacious live-coding talk about how to design one’s own vagina dilator—look this up, if you need to—using Go-based 3D-modelling tools. Nerd to the core, they even enhanced the original design by adding a Gopher head at the outer end. Nice touch!</p>
+<h1 id="last-session">Last session</h1>
+<h2 id="james-bowes-the-dangers-of-reflect-and-unsafe">James Bowes: the dangers of <code>reflect</code> and <code>unsafe</code></h2>
+<p><a href="https://twitter.com/jrbowes">James Bowes</a> gave us pause on whether mere mortals should ever reach for the notorious <code>reflect</code> and <code>unsafe</code> packages. Usage of <code>reflect</code> is pervasive in the standard library: whenever you see empty interfaces (<code>interface{}</code>) or struct tags, there is a good chance that <code>reflect</code> is working its magic under the hood. As for <code>unsafe</code>, it is used in places when sidestepping the type system is essential for good performance.</p>
+<p>However, those two packages can be dangerous when used by the uninitiated—yours truly included. James’s injunction is clear: as a rule of thumb, stay away from the <code>unsafe</code> package, and resist the temptation to use <code>reflect</code> (e.g. for run-time dependency injection).</p>
+<h2 id="jess-frazelle-living-at-risc-v">Jess Frazelle: living at RISC-V</h2>
+<p><a href="https://twitter.com/jessfraz">Jess Frazelle</a> is a bright star of the Go community. She has a refreshing way of dropping the F-bomb every other sentence, which keeps the audience on its toes. She took us on a whirlwind tour of the x86 zoo of instruction sets. One prominent x86 instruction-set architecture is RISC-V, and Jess talked about her work in adding support for the architecture to Go.</p>
+<h2 id="marcel-van-lohuizen-error-wrapping-goes-mainstream">Marcel van Lohuizen: error wrapping goes mainstream</h2>
+<p>For the final talk of the conference, <a href="https://twitter.com/mpvl_">Marcel van Lohuizen</a> teased upcoming improvements in Go’s error-handling mechanics. Wrapping errors, i.e. the practice of referring to the cause of an error within itself, is a useful feature conspicuously absent from Go’s standard-library <code>errors</code> package. To fill that void, the community has splintered into many different approaches of wrapping errors, all mutually incompatible in slightly different ways. Standardisation around how errors ought to be wrapped was badly needed.</p>
+<p>Marcel’s talk described how the <code>errors</code> API is going to expand in Go 2 in order to accommodate a canonical way of wrapping errors. The planned changes also open the possibility of error-message localisation, for the benefit of programmers who would rather read error messages in their native tongue. The new API is already available in experimental package <a href="https://godoc.org/golang.org/x/exp/errors">golang.org/x/exp/errors</a>. Great stuff!</p>
+<figure>
+<img src="../images/nicolas_ravelli_5.jpg" alt="Taken at dotGo 2019 in Paris on March 25, 2019 by Nicolas Ravelli" /><figcaption>Taken at dotGo 2019 in Paris on March 25, 2019 by Nicolas Ravelli</figcaption>
+</figure>
+<h1 id="epilogue">Epilogue</h1>
+<p>After a few pints at some pub (whose name I’ve forgotten) next door from the Moulin Rouge, it was time to sleep it off.</p>
+<p>Other accounts—including <a href="https://www.eskuel.net/dotgo-europe-2019-1563">this one</a> (in French)—have popped up on the Web, and I invite you to read them to get a different perspective about the conference.</p>
+<p>Thanks again to <a href="https://www.humancoders.com">Human Coders</a>, who generously gave me a conference ticket. dotGo 2020 has already been announced, and will be held in the same venue next March. If it’s anything like this year’s edition, I’ll try my best to attend, and you should too.</p>
+    </section>
+</article>
+
+        </main>
+
+        <footer>
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </footer>
+    </body>
+</html>

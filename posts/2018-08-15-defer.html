@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>jubobs's blog - Defer: sweet, but no syntactic sugar</title>
+        <link rel="stylesheet" href="../css/default.css" />
+        <link rel="stylesheet" href="../css/syntax.css" />
+    </head>
+    <body>
+        <header>
+            <div class="logo">
+                <a href="../">jubobs's blog</a>
+            </div>
+            <nav>
+                <a href="../">Home</a>
+                <a href="../about.html">About</a>
+                <a href="../contact.html">Contact</a>
+                <a href="../archive.html">Archive</a>
+            </nav>
+        </header>
+
+        <main role="main">
+            <h1>Defer: sweet, but no syntactic sugar</h1>
+            <article>
+    <section class="header">
+        Posted on August 15, 2018
+        
+            by Julien Cretel
+        
+    </section>
+    <section>
+        <h1 id="defer-in-a-nutshell"><code>defer</code>, in a nutshell</h1>
+<p>When learning Go, one quickly comes across the <code>defer</code> keyword. For instance, the <a href="https://tour.golang.org/flowcontrol/12">Tour of Go</a> introduces <code>defer</code> thus:</p>
+<blockquote>
+<p>A defer statement defers the execution of a function until the surrounding function returns.</p>
+<p>The deferred call’s arguments are evaluated immediately, but the function call is not executed until the surrounding function returns.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode go"><code class="sourceCode go"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">package</span> main</a>
+<a class="sourceLine" id="cb1-2" title="2"></a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="kw">import</span> <span class="st">&quot;fmt&quot;</span></a>
+<a class="sourceLine" id="cb1-4" title="4"></a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="kw">func</span> main() {</a>
+<a class="sourceLine" id="cb1-6" title="6">	<span class="kw">defer</span> fmt.Println(<span class="st">&quot;world&quot;</span>)</a>
+<a class="sourceLine" id="cb1-7" title="7"></a>
+<a class="sourceLine" id="cb1-8" title="8">	fmt.Println(<span class="st">&quot;hello&quot;</span>)</a>
+<a class="sourceLine" id="cb1-9" title="9">}</a></code></pre></div>
+</blockquote>
+<p><code>defer</code> provides a convenient way of ensuring that some piece of code unconditionally gets executed before the enclosing function returns control to its caller.</p>
+<p>Often, you’ll write a function that acquires some resources (file descriptor, mutex, etc.). Such a function must typically release those resources before returning, regardless of the execution path—your function may contain numerous return statements indeed. Failing to do so will likely result in issues at run time, such as resource leaks, deadlock, etc.</p>
+<p>The Tour of Go is not meant as an exhaustive introduction to Golang; it does a great job at demonstrating how <code>defer</code> works when the enclosing function returns <em>normally</em>, but it leaves some important subtleties out.</p>
+<h1 id="how-well-do-you-understand-defer">How well do you understand <code>defer</code>?</h1>
+<h2 id="quiz-time">Quiz time!</h2>
+<p>To test Gophers’ understanding of <code>defer</code>’s semantics, I ran the following <a href="https://twitter.com/_jubobs_/status/1029027873284337664">poll</a> on Twitter:</p>
+<blockquote>
+<p>Functions <code>foo</code> and <code>bar</code> have exactly the same behaviour/semantics:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode go"><code class="sourceCode go"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">func</span> foo(<span class="kw">func</span> f()) {</a>
+<a class="sourceLine" id="cb2-2" title="2">    <span class="kw">defer</span> fmt.Println(<span class="st">&quot;bye&quot;</span>)</a>
+<a class="sourceLine" id="cb2-3" title="3">    f()</a>
+<a class="sourceLine" id="cb2-4" title="4">}</a>
+<a class="sourceLine" id="cb2-5" title="5"></a>
+<a class="sourceLine" id="cb2-6" title="6"><span class="kw">func</span> bar(<span class="kw">func</span> f()) {</a>
+<a class="sourceLine" id="cb2-7" title="7">    f()</a>
+<a class="sourceLine" id="cb2-8" title="8">    fmt.Println(<span class="st">&quot;bye&quot;</span>)</a>
+<a class="sourceLine" id="cb2-9" title="9">}</a></code></pre></div>
+<p>True or false?</p>
+</blockquote>
+<p>Take a moment to think about it… What would your answer have been?</p>
+<p>Although the poll’s response rate is low (only 16 respondents) and the respondents’ level of proficiency with Golang difficult to ascertain, I do find the results revealing: the majority of respondents (56%) answered “true”, yet the correct answer is “false”.</p>
+<h2 id="an-explanation">An explanation</h2>
+<p>Functions <code>foo</code> and <code>bar</code> do <em>not</em> have the same semantics. In particular, if function <code>f</code> panics when invoked—either because it happens to be <code>nil</code> or because a panic occurs during its execution—function <code>bar</code> will simply panic (without printing anything), whereas function <code>foo</code> will print “bye” to standard output before panicking. You can try it for yourself on the <a href="https://play.golang.org/p/RSk7EGtFmRn">Go Playground</a>.</p>
+<p>In this case, if <code>fmt.println(&quot;bye&quot;)</code> is to be executed unconditionally, using <code>defer</code> is <em>not</em> optional, because function <code>bar</code> has no guarantee that its callers will pass a function argument that doesn’t panic when invoked. Thanks to the guarantees against panic that <code>defer</code> provides, function <code>foo</code> obviates the problem altogether.</p>
+<h1 id="to-defer-or-not-to-defer-that-is-the-question">To defer or not to defer: that is the question</h1>
+<p>This example should serve as a caution. <code>defer</code> is easily misconstrued (guilty!) as a mere syntactic convenience. A failure to use it may result in serious issues in your Go programs.</p>
+<p>Granted, if you’re writing performance-critical code (such as a <a href="https://www.youtube.com/watch?v=hWNwI5q01gI&amp;time_continue=15m10s">database</a>) and if you know what you’re doing, you may be driven to eschew deferred statements in some places of your code, but</p>
+<blockquote>
+<p>Always use <code>defer</code> (unless you have a good reason not to).</p>
+</blockquote>
+<p>is a good rule of thumb. To paraphrase Bill Kennedy’s (<a href="https://twitter.com/goinggodotnet">goinggodotnet</a> on Twitter) exhortation, which he repeats liberally in his <a href="https://www.safaribooksonline.com/videos/ultimate-go-programming/9780134757476">video course</a>:</p>
+<blockquote>
+<p>Correctness takes precedence over performance.</p>
+</blockquote>
+<p>Having a firm grasp of <code>defer</code>’s semantics is likely to pay great dividends towards the correctness of your Go programs. Don’t defer reading the fine print about <code>defer</code> :)</p>
+<h1 id="additional-resources">Additional resources</h1>
+<ul>
+<li><a href="https://golang.org/ref/spec#Defer_statements"><em>Defer statements</em></a> (language specification)</li>
+<li><a href="https://blog.golang.org/defer-panic-and-recover"><em>Defer, panic, and recover</em></a> (Go Blog)</li>
+</ul>
+    </section>
+</article>
+
+        </main>
+
+        <footer>
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </footer>
+    </body>
+</html>
