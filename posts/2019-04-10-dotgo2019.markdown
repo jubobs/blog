@@ -222,31 +222,32 @@ conference ticket. dotGo 2020 has already been announced, and will be held in
 the same venue next March. If it's anything like this year's edition, I'll try
 my best to attend, and you should too.
 
-
-[human-coders]: https://www.humancoders.com
+[avo]: https://github.com/mmcloughlin/avo
+[bryan-boreham]: https://twitter.com/bboreham
+[cockburn-hex-arch]: http://wiki.c2.com/?HexagonalArchitecture
+[daniel-marti]: https://twitter.com/mvdan_
+[dave-cheney-post]: https://dave.cheney.net/2016/04/07/constant-errors
+[dave-cheney]: https://twitter.com/davecheney
 [dotconf]: https://www.dotconferences.com/
 [dotgo2019]: https://www.dotgo.eu/
-[human-coders-go]: https://www.humancoders.com/formations/go
-[human-coders-fr]: https://blog.humancoders.com/retour-sur-dotgo-2019-2742/
-[daniel-marti]: https://twitter.com/mvdan_
-[kat-zien]: https://twitter.com/kasiazien
-[cockburn-hex-arch]: http://wiki.c2.com/?HexagonalArchitecture
-[ignat-korchagin]: https://twitter.com/secumod
-[michael-mcloughlin]: https://twitter.com/mbmcloughlin
-[marcus-olsson-talk]: https://www.youtube.com/watch?v=twcDf_Y2gXY
-[avo]: https://github.com/mmcloughlin/avo
-[olivier-w]: https://twitter.com/owulveryck
-[roberto-clapis]: https://twitter.com/empijei
-[natalie-pistunovich]: https://twitter.com/nataliepis
-[valentin-deleplace]: https://twitter.com/val_deleplace
-[joan-lopez]: https://twitter.com/joanjan14
-[dave-cheney]: https://twitter.com/davecheney
-[dave-cheney-post]: https://dave.cheney.net/2016/04/07/constant-errors
-[jean-de-klerk]: https://twitter.com/jadekler
-[go-modules]: https://golang.org/doc/go1.11#modules
-[johann-brandhorst]: https://twitter.com/JohanBrandhorst
-[bryan-boreham]: https://twitter.com/bboreham
 [ellen-korbes]: https://twitter.com/ellenkorbes
 [exp-errors]: https://godoc.org/golang.org/x/exp/errors
+[go-modules]: https://golang.org/doc/go1.11#modules
+[human-coders-fr]: https://blog.humancoders.com/retour-sur-dotgo-2019-2742/
+[human-coders-go]: https://www.humancoders.com/formations/go
+[human-coders]: https://www.humancoders.com
+[ignat-korchagin]: https://twitter.com/secumod
+[james-bowes]: https://twitter.com/jrbowes
+[jean-de-klerk]: https://twitter.com/jadekler
+[jess-frazelle]: https://twitter.com/jessfraz
+[joan-lopez]: https://twitter.com/joanjan14
+[johann-brandhorst]: https://twitter.com/JohanBrandhorst
+[kat-zien]: https://twitter.com/kasiazien
 [marcel-van-lohuizen]: https://twitter.com/mpvl_
+[marcus-olsson-talk]: https://www.youtube.com/watch?v=twcDf_Y2gXY
+[michael-mcloughlin]: https://twitter.com/mbmcloughlin
+[natalie-pistunovich]: https://twitter.com/nataliepis
+[olivier-wulveryck]: https://twitter.com/owulveryck
 [other-summary]: https://www.eskuel.net/dotgo-europe-2019-1563
+[roberto-clapis]: https://twitter.com/empijei
+[valentin-deleplace]: https://twitter.com/val_deleplace
